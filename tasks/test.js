@@ -18,10 +18,23 @@ const mochaNoChildProcess = `${bin}/_mocha`;
 const mochaOpts = yaml.load(fs.readFileSync(`${process.cwd()}/.mocha.yml`)).mocha;
 const mochaArgs = mochaOpts.join(' ').split(' ').concat([filesToTestGlob]);
 
+let child;
+
 if (shouldNotCover) {
-  spawn(mocha, mochaArgs, { stdio: 'inherit' });
+  child = spawn(mocha, mochaArgs, { stdio: 'inherit' });
 } else {
-  spawn(istanbul, [
+  child = spawn(istanbul, [
     'cover', mochaNoChildProcess, '-x', filesToTestGlob, '--',
   ].concat(mochaArgs), { stdio: 'inherit' });
 }
+
+child.on('error', () => {
+  console.log('Test Task: ERROR, Code 1 ');
+  process.exit(1);
+});
+
+
+child.on('exit', (code, signal) => {
+  console.log(`Test Task: EXIT, Code ${code}`);
+  process.exit(code);
+});
