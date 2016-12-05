@@ -1,6 +1,6 @@
 # Front End Tools
 
-** NOTE ** WIP
+**NOTE: WIP**
 
 This repo is a collection of general-purpose scripts intended to be used as npm
 scripts that you can use to simplify frontend development. Usage of these tools
